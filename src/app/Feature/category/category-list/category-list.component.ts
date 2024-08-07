@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CategoryService } from '../Services/category.service';
 import { response } from 'express';
 import { category } from '../Model/category-model';
@@ -16,11 +16,24 @@ import { Observable } from 'rxjs';
 export class CategoryListComponent implements OnInit {
 
   categories$?: Observable<category[]>;
+  category?:category;
 
-  constructor(private categoryservice: CategoryService){
+  constructor(private categoryservice: CategoryService,private router:Router){
 
   }
-
+  onDelete(id:string):void{
+    console.log(id);
+    if(id)
+      {
+        this.categoryservice.deletecategories(id)
+        .subscribe({
+          next:(response)=>{
+            //this.router.navigateByUrl('/admin/categories');
+            window.location.reload();
+          }
+        });
+      }
+  }
   ngOnInit(): void {
     this.categories$=this.categoryservice.getAllcategories();
   }
